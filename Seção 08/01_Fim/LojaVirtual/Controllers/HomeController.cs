@@ -9,19 +9,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using LojaVirtual.Database;
 using LojaVirtual.Repositories.Contracts;
+using Microsoft.AspNetCore.Http;
+using LojaVirtual.Libraries.Login;
 
 namespace LojaVirtual.Controllers
 {
     public class HomeController : Controller
     {
-        private LojaVirtualContext _banco;
+        private LoginCliente _loginCliente;
         private IClienteRepository _clienteRepository;
         private INewsletterRepository _newsletterRepository;
-        public HomeController(IClienteRepository clienteRepository, INewsletterRepository newsletterRepository)
+        public HomeController(IClienteRepository clienteRepository, INewsletterRepository newsletterRepository, LoginCliente loginCliente)
         {
            // _banco = banco;
             _clienteRepository = clienteRepository;
             _newsletterRepository = newsletterRepository;
+            _loginCliente = loginCliente;
         }
 
         [HttpGet]
@@ -98,9 +101,52 @@ namespace LojaVirtual.Controllers
             return View("Contato");
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult Login([FromForm] Cliente cliente)
+        {
+
+            Cliente clienteDB = _clienteRepository.Login(cliente.Email, cliente.Senha);
+           
+            if(clienteDB != null)
+            {
+                //Email, nome, senha, cpf
+
+                //HttpContext.Session.Set("ID", new byte[] {(byte)clienteDB.Id });
+                //HttpContext.Session.SetString("Email",cliente.Email );
+                //HttpContext.Session.SetInt32("Idade", 29);
+
+                _loginCliente.Login(clienteDB);
+
+                return new RedirectResult(Url.Action(nameof(Painel)));
+            }
+            else
+            {
+                ViewData["MSG_E"] = "O usuário não encontrado, verifique e-mail e senha digitado!";
+                return View();
+
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Painel()
+        {
+
+            Cliente cliente = _loginCliente.GetCliente();
+            if (cliente != null)
+            {
+                return new ContentResult() { Content = "Usuário " + cliente.Id + ". Email: "+ cliente.Email + ". Idade: "+ DateTime.Now.AddYears(- cliente.Nascimento.Year).Year +" Logado!" };
+            }
+            else
+            {
+                return new ContentResult() { Content = "acesso negado. " };
+            }
+            
+           
         }
 
         [HttpPost]

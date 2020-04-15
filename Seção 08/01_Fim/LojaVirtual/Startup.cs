@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using LojaVirtual.Repositories;
 using LojaVirtual.Repositories.Contracts;
+using LojaVirtual.Libraries.Sessao;
+using LojaVirtual.Libraries.Login;
 
 namespace LojaVirtual
 {
@@ -32,7 +34,7 @@ namespace LojaVirtual
              * Padrão Repository 
              * 
             */
-
+            services.AddHttpContextAccessor();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<INewsletterRepository, NewsletterRepository>();
 
@@ -43,7 +45,15 @@ namespace LojaVirtual
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //Session Configuração 
 
+            services.AddMemoryCache(); // Guardar os dados na memória
+            services.AddSession(options => {
+
+            });
+
+            services.AddScoped<Sessao>();
+            services.AddScoped<LoginCliente>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
@@ -67,6 +77,7 @@ namespace LojaVirtual
            // app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
             /*
              * https://www.site.com.br/ -> Qual o controlador ele vai? (Gestão) -> Rotas
              *  https://www.site.com.br/{caminho}?{querystring}#{fragmento}
