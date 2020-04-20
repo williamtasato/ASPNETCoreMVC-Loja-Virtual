@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>0a2722be-8534-43a2-a597-f0fbfe98c104</UserSecretsId>
   </PropertyGroup>
 
 
@@ -15,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.7" />
   </ItemGroup>
 
 
@@ -32,6 +34,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Mensagem.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Areas\Colaborador\Models\" />
   </ItemGroup>
 
 </Project>

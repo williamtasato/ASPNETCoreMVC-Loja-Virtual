@@ -4,39 +4,22 @@ using LojaVirtual.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LojaVirtual.Migrations
 {
     [DbContext(typeof(LojaVirtualContext))]
-    partial class LojaVirtualContextModelSnapshot : ModelSnapshot
+    [Migration("20200416124219_Colaboradores")]
+    partial class Colaboradores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("LojaVirtual.Models.Categoria", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CategoriaPaiId");
-
-                    b.Property<string>("Nome");
-
-                    b.Property<string>("Slug");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoriaPaiId");
-
-                    b.ToTable("Categorias");
-                });
 
             modelBuilder.Entity("LojaVirtual.Models.Cliente", b =>
                 {
@@ -100,13 +83,6 @@ namespace LojaVirtual.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NewsletterEmails");
-                });
-
-            modelBuilder.Entity("LojaVirtual.Models.Categoria", b =>
-                {
-                    b.HasOne("LojaVirtual.Models.Categoria", "CategoriaPai")
-                        .WithMany()
-                        .HasForeignKey("CategoriaPaiId");
                 });
 #pragma warning restore 612, 618
         }

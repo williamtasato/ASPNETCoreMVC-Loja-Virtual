@@ -37,6 +37,8 @@ namespace LojaVirtual
             services.AddHttpContextAccessor();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<INewsletterRepository, NewsletterRepository>();
+            services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -54,6 +56,7 @@ namespace LojaVirtual
 
             services.AddScoped<Sessao>();
             services.AddScoped<LoginCliente>();
+            services.AddScoped<LoginColaborador>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
@@ -91,6 +94,10 @@ namespace LojaVirtual
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            );
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
