@@ -73,7 +73,8 @@ namespace LojaVirtual.Areas.Colaborador.Controllers
             ViewBag.Categorias = _categoriaRepository.ObterTodasCategorias().Where(c => c.Id != id).Select(a => new SelectListItem(a.Nome, a.Id.ToString()));
             return View();
         }
-
+        [HttpGet]
+        [ValidateHttpReferer]
         public IActionResult Excluir(int id)
         {
             _categoriaRepository.Excluir(id);
