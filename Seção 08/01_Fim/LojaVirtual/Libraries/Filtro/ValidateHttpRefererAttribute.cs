@@ -12,23 +12,24 @@ namespace LojaVirtual.Libraries.Filtro
         public void OnActionExecuted(ActionExecutedContext context)
         {
             //Executando após passar pelo controlador
-            //string referer = context.HttpContext.Request.Headers["Referer"].ToString();
-            //if (string.IsNullOrEmpty(referer))
-            //{
-            //    context.Result = new ContentResult() { Content ="Acesso negado!"};
-            //}else
-            //{
-            //    Uri uri = new Uri(referer);
-            //    string hostReferer = uri.Host ;
-            //    string hostServidor = context.HttpContext.Request.Host.Host;
+            string referer = context.HttpContext.Request.Headers["Referer"].ToString();
+            if (string.IsNullOrEmpty(referer))
+            {
+                context.Result = new ContentResult() { Content = "Acesso negado!" };
+            }
+            else
+            {
+                Uri uri = new Uri(referer);
+                string hostReferer = uri.Host;
+                string hostServidor = context.HttpContext.Request.Host.Host;
 
-            //    if (hostReferer != hostServidor)
-            //    {
-            //        context.Result = new ContentResult() { Content = "Acesso negado!" };
-            //    }
-            //}
+                if (hostReferer != hostServidor)
+                {
+                    context.Result = new ContentResult() { Content = "Acesso negado!" };
+                }
+            }
 
-          
+
 
         }
 

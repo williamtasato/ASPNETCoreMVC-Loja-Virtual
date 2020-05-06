@@ -43,6 +43,8 @@ namespace LojaVirtual
             services.AddScoped<INewsletterRepository, NewsletterRepository>();
             services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IImagemRepository, ImagemRepository>();
 
 
             /*
@@ -80,7 +82,9 @@ namespace LojaVirtual
             services.AddScoped<Sessao>();
             services.AddScoped<LoginCliente>();
             services.AddScoped<LoginColaborador>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => {
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(x => "O campo deve ser preenchido!");
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(connection));
