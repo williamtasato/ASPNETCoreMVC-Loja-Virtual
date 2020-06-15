@@ -12,6 +12,7 @@ using LojaVirtual.Repositories.Contracts;
 using Microsoft.AspNetCore.Http;
 using LojaVirtual.Libraries.Login;
 using LojaVirtual.Libraries.Filtro;
+using LojaVirtual.Models.ViewModels;
 
 namespace LojaVirtual.Controllers
 {
@@ -20,24 +21,27 @@ namespace LojaVirtual.Controllers
         private LoginCliente _loginCliente;
         private IClienteRepository _clienteRepository;
         private INewsletterRepository _newsletterRepository;
+        IProdutoRepository _produtoRepository;
         private GerenciarEmail _gerenciarEmail;
-        public HomeController(IClienteRepository clienteRepository, INewsletterRepository newsletterRepository, LoginCliente loginCliente, GerenciarEmail gerenciarEmail)
+        public HomeController(IProdutoRepository produtoRepository, IClienteRepository clienteRepository, INewsletterRepository newsletterRepository, LoginCliente loginCliente, GerenciarEmail gerenciarEmail)
         {
            // _banco = banco;
             _clienteRepository = clienteRepository;
             _newsletterRepository = newsletterRepository;
             _loginCliente = loginCliente;
             _gerenciarEmail = gerenciarEmail;
+            _produtoRepository = produtoRepository;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
+         
             return View();
         }
 
         [HttpPost]
-        public IActionResult Index([FromForm] NewsletterEmail newsletter)
+        public IActionResult Index(int? pagina, string pesquisa, string ordenacao,[FromForm] NewsletterEmail newsletter)
         {
             if (ModelState.IsValid)
             {
@@ -49,8 +53,14 @@ namespace LojaVirtual.Controllers
             }
             else
             {
-                return View();
+               
+                return View(newsletter);
             }
+        }
+
+        public IActionResult Categoria()
+        {
+            return View();
         }
 
         public IActionResult Contato()

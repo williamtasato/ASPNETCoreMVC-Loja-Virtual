@@ -43,10 +43,15 @@ namespace LojaVirtual.Repositories
 
         public Produto ObterProduto(int Id)
         {
-            return _banco.Produtos.Include(a => a.Imagens).Where(a => a.Id  ==Id).FirstOrDefault();
+            return _banco.Produtos.Include(a => a.Imagens).OrderBy(a => a.Nome).Where(a => a.Id  ==Id).FirstOrDefault();
         }
 
         public IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa)
+        {
+          return ObterTodosProdutos(pagina, pesquisa, "A", null);
+        }
+
+        public IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, IEnumerable<Categoria> categorias)
         {
             int NumeroPagina = pagina ?? 1;
             var bancoProdutos = _banco.Produtos.AsQueryable();
@@ -54,6 +59,28 @@ namespace LojaVirtual.Repositories
             if (!string.IsNullOrEmpty(pesquisa))
             {
                 bancoProdutos = bancoProdutos.Where(c => c.Nome.Contains(pesquisa.Trim()));
+            }
+
+            if(ordenacao == "A")
+            {
+                bancoProdutos = bancoProdutos.OrderBy(a => a.Nome);
+            }
+
+            if (ordenacao == "MA")
+            {
+                bancoProdutos = bancoProdutos.OrderByDescending(a => a.Valor );
+            }
+
+            if (ordenacao == "ME")
+            {
+                bancoProdutos = bancoProdutos.OrderBy(a => a.Valor);
+            }
+
+            if(categorias != null && categorias.Count() > 0)
+            {
+                // 1 - Informática - 5 - Teclado IEnumerable Categorias
+                //SQL Where CategoriaId IN (1,5,....)
+                bancoProdutos = bancoProdutos.Where(a => categorias.Select(b => b.Id).Contains(a.CategoriaId));
             }
 
             return bancoProdutos.Include(a => a.Imagens).ToPagedList<Produto>(NumeroPagina, _conf.GetValue<int>("RegistroPorPagina"));

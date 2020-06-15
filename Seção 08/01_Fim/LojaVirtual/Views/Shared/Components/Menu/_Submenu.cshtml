@@ -1,0 +1,33 @@
+﻿@{
+    var TodasCategorias =(List<Categoria>) ViewData["TodasCategorias"];
+    var CategoriaPai =(Categoria) ViewData["CategoriaPai"]; ;
+    var CategoriaFilho = TodasCategorias.Where(e => e.CategoriaPaiId == CategoriaPai.Id).ToList();
+}
+
+ @if (CategoriaFilho.Count() > 0)
+    {
+        <li class="dropdown-submenu">
+            <a class="dropdown-item" asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@CategoriaPai.Slug">@CategoriaPai.Nome</a>
+            <ul class="dropdown-menu">
+                @foreach (var categoriaF in CategoriaFilho)
+                {
+                    @if (TodasCategorias.Where(e => e.CategoriaPaiId == categoriaF.Id).Count() > 0)
+                    {
+                        //apresentação do subMenu recursivo
+                        ViewData.Remove("CategoriaPai");
+                        @await Html.PartialAsync("~/Views/Shared/Components/Menu/_SubMenu.cshtml", new ViewDataDictionary(ViewData) { { "CategoriaPai", categoriaF } })
+                    }
+                    else
+                    {
+                        <li class="dropdown-item" tabindex="1"><a asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@categoriaF.Slug">@categoriaF.Nome</a></li>
+                    }
+                }
+
+
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="dropdown-item"><a asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@CategoriaPai.Slug">@CategoriaPai.Nome</a></li>
+    }
