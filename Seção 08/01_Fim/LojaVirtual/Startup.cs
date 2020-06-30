@@ -19,6 +19,9 @@ using System.Net.Mail;
 using System.Net;
 using LojaVirtual.Libraries.Email;
 using LojaVirtual.Libraries.Middleware;
+using LojaVirtual.Libraries.CarrinhoCompra;
+using AutoMapper;
+using LojaVirtual.Libraries.AutoMapper;
 
 namespace LojaVirtual
 {
@@ -34,6 +37,10 @@ namespace LojaVirtual
       
         public void ConfigureServices(IServiceCollection services)
         {
+            /*
+             * AutoMapper 
+            */
+            services.AddAutoMapper(config => config.AddProfile<MappingProfile>());
             /*
              * Padrão Repository 
              * 
@@ -64,6 +71,8 @@ namespace LojaVirtual
             });
 
             services.AddScoped<GerenciarEmail>();
+            services.AddScoped<LojaVirtual.Libraries.Cookie.Cookie>();
+            services.AddScoped<CarrinhoCompra>();
            
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -80,6 +89,7 @@ namespace LojaVirtual
             });
 
             services.AddScoped<Sessao>();
+            
             services.AddScoped<LoginCliente>();
             services.AddScoped<LoginColaborador>();
             services.AddMvc(options => {
